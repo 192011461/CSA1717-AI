@@ -1,0 +1,39 @@
+from collections import deque
+MAX_X = 5
+MAX_Y = 3
+GOAL = (4, 0)
+ACTIONS = [
+    lambda x, y: (MAX_X, y), 
+    lambda x, y: (x, MAX_Y),
+    lambda x, y: (0, y),      
+    lambda x, y: (x, 0),      
+    lambda x, y: (min(x + y, MAX_X), max(0, x + y - MAX_X)),  
+    lambda x, y: (max(0, x + y - MAX_Y), min(x + y, MAX_Y))   
+]
+def bfs():
+    visited = set()
+    queue = deque([(0, 0, [])])
+    
+    while queue:
+        x, y, path = queue.popleft()
+        if (x, y) == GOAL:
+            return path + [(x, y)]
+
+        for action in ACTIONS:
+            new_x, new_y = action(x, y)
+            if (new_x, new_y) not in visited:
+                visited.add((new_x, new_y))
+                queue.append((new_x, new_y, path + [(x, y)]))
+    return None
+
+def print_solution(solution):
+    if solution:
+        print("Solution found:")
+        for i, (x, y) in enumerate(solution):
+            print(f"Step {i+1}: ({x}, {y})")
+    else:
+        print("No solution found.")
+
+if __name__ == "__main__":
+    solution = bfs()
+    print_solution(solution)
