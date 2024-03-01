@@ -1,0 +1,33 @@
+def solve_cryptarithmetic(puzzle):
+
+    lhs, rhs = puzzle.lower().replace(" ", "").split("==")
+    letters = set(lhs + rhs)
+
+    
+    for perm in range(10 ** len(letters)):
+        mapping = {}
+        perm_str = str(perm).zfill(len(letters))
+
+        
+        for i, letter in enumerate(letters):
+            mapping[letter] = int(perm_str[i])
+
+        lhs_num = int("".join(str(mapping[char]) for char in lhs))
+        rhs_num = int("".join(str(mapping[char]) for char in rhs))
+        result_num = int("".join(str(mapping[char]) for char in lhs + rhs))
+        
+        if lhs_num + rhs_num == result_num:
+            return mapping
+
+    return None
+
+
+if __name__ == "__main__":
+    puzzle = "send + more == money"
+    solution = solve_cryptarithmetic(puzzle)
+    if solution:
+        print("Solution found:")
+        for letter, digit in solution.items():
+            print(f"{letter} = {digit}")
+    else:
+        print("No solution found.")
